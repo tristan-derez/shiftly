@@ -8,6 +8,13 @@
       "when": 1788716539471,
       "tag": "0000_light_black_panther",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788724219883,
+      "tag": "0001_chunky_the_fury",
+      "breakpoints": true
     }
   ]
 }

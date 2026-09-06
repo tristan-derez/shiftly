@@ -1,14 +1,8 @@
 import type { DayStatus, Job } from "@workspace/api";
 import { relations, sql } from "drizzle-orm";
-import {
-	date,
-	pgEnum,
-	pgTable,
-	time,
-	timestamp,
-	unique,
-	uuid,
-} from "drizzle-orm/pg-core";
+import { date, pgEnum, pgTable, time, unique, uuid } from "drizzle-orm/pg-core";
+import { timestamps } from "./helpers.ts";
+import { users } from "./user.ts";
 
 const jobValues = [
 	"F",
@@ -35,16 +29,18 @@ export const daySchedules = pgTable(
 	"day_schedules",
 	{
 		id: uuid("id").primaryKey().default(sql`uuidv7()`),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, {
+				onDelete: "cascade",
+			}),
 		date: date("date").notNull(),
 		status: dayStatusEnum("status").notNull().default("unplanned"),
-		createdAt: timestamp("created_at", { withTimezone: true })
-			.notNull()
-			.defaultNow(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
-			.notNull()
-			.defaultNow(),
+		...timestamps,
 	},
-	(table) => [unique("day_schedules_date_unique").on(table.date)],
+	(table) => [
+		unique("day_schedules_user_date_unique").on(table.userId, table.date),
+	],
 );
 
 export const shifts = pgTable(
@@ -56,16 +52,16 @@ export const shifts = pgTable(
 			.references(() => daySchedules.id, {
 				onDelete: "cascade",
 			}),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, {
+				onDelete: "cascade",
+			}),
 		period: shiftPeriodEnum("period").notNull(),
 		start: time("start", { precision: 0 }).notNull(),
 		end: time("end", { precision: 0 }).notNull(),
 		job: jobEnum("job").notNull(),
-		createdAt: timestamp("created_at", { withTimezone: true })
-			.notNull()
-			.defaultNow(),
-		updatedAt: timestamp("updated_at", { withTimezone: true })
-			.notNull()
-			.defaultNow(),
+		...timestamps,
 	},
 	(table) => [
 		unique("shifts_day_schedule_period_unique").on(
@@ -75,14 +71,25 @@ export const shifts = pgTable(
 	],
 );
 
-export const daySchedulesRelations = relations(daySchedules, ({ many }) => ({
-	shifts: many(shifts),
-}));
+export const daySchedulesRelations = relations(
+	daySchedules,
+	({ one, many }) => ({
+		user: one(users, {
+			fields: [daySchedules.userId],
+			references: [users.id],
+		}),
+		shifts: many(shifts),
+	}),
+);
 
 export const shiftsRelations = relations(shifts, ({ one }) => ({
 	daySchedule: one(daySchedules, {
 		fields: [shifts.dayScheduleId],
 		references: [daySchedules.id],
+	}),
+	user: one(users, {
+		fields: [shifts.userId],
+		references: [users.id],
 	}),
 }));
 
