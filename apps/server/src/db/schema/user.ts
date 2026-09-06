@@ -8,12 +8,13 @@ export const users = pgTable(
 	{
 		id: uuid("id").primaryKey().default(sql`uuidv7()`),
 		name: text("name").notNull(),
+		username: text("username").notNull(),
 		email: text("email"),
 		password: text("password").notNull(),
 		...timestamps,
 	},
 	(table) => [
-		unique("users_name_unique").on(table.name),
+		unique("users_username_unique").on(table.username),
 		unique("users_email_unique").on(table.email),
 	],
 );
