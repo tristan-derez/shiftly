@@ -1,0 +1,21 @@
+{
+	"name": "shiftly",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"build": "turbo build",
+		"dev": "turbo dev",
+		"lint": "turbo lint",
+		"format": "turbo format",
+		"typecheck": "turbo typecheck"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.5",
+		"turbo": "^2.9.18",
+		"typescript": "^7.0.2"
+	},
+	"packageManager": "pnpm@10.33.4",
+	"engines": {
+		"node": ">=22.18"
+	}
+}

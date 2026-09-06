@@ -1,0 +1,30 @@
+import { Schema } from "effect";
+
+export const Job = Schema.Literal("F", "Amb", "L1", "L2", "Firam", "Ram");
+export type Job = typeof Job.Type;
+
+export const DayStatus = Schema.Literal("planned", "rest", "unplanned");
+export type DayStatus = typeof DayStatus.Type;
+
+export const Shift = Schema.Struct({
+	start: Schema.String,
+	end: Schema.String,
+	job: Job,
+});
+export type Shift = typeof Shift.Type;
+
+export const DaySchedule = Schema.Struct({
+	date: Schema.String,
+	status: DayStatus,
+	morning: Schema.NullOr(Shift),
+	afternoon: Schema.NullOr(Shift),
+});
+export type DaySchedule = typeof DaySchedule.Type;
+
+export const WeekSchedule = Schema.Struct({
+	weekNumber: Schema.Number,
+	startDate: Schema.String,
+	endDate: Schema.String,
+	days: Schema.mutable(Schema.Array(DaySchedule)),
+});
+export type WeekSchedule = typeof WeekSchedule.Type;

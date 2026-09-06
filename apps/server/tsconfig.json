@@ -1,0 +1,15 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"allowImportingTsExtensions": true,
+		"types": ["node"],
+		"noEmit": true,
+		"paths": {
+			"@workspace/api": ["../../packages/api/src/index.ts"]
+		}
+	},
+	"include": ["src", "drizzle.config.ts"],
+	"exclude": ["node_modules", "drizzle"]
+}

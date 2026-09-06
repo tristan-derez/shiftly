@@ -1,0 +1,30 @@
+{
+	"name": "server",
+	"version": "0.0.1",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "node --watch src/index.ts",
+		"start": "node src/index.ts",
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"typecheck": "tsc --noEmit",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:push": "drizzle-kit push",
+		"db:studio": "drizzle-kit studio"
+	},
+	"dependencies": {
+		"@effect/platform": "^0.97.1",
+		"@effect/platform-node": "^0.108.1",
+		"@workspace/api": "workspace:*",
+		"drizzle-orm": "^0.45.2",
+		"effect": "^3.22.1",
+		"postgres": "^3.4.9"
+	},
+	"devDependencies": {
+		"@types/node": "^26",
+		"drizzle-kit": "^0.31.10",
+		"typescript": "^7.0.2"
+	}
+}

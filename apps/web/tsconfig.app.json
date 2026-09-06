@@ -1,0 +1,19 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+		"lib": ["ES2023", "DOM"],
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"types": ["vite/client"],
+		"allowImportingTsExtensions": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@workspace/api": ["../../packages/api/src/index.ts"],
+			"@workspace/ui/*": ["../../packages/ui/src/*"]
+		}
+	},
+	"include": ["src"]
+}
