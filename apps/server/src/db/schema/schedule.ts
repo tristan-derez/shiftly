@@ -52,11 +52,6 @@ export const shifts = pgTable(
 			.references(() => daySchedules.id, {
 				onDelete: "cascade",
 			}),
-		userId: uuid("user_id")
-			.notNull()
-			.references(() => users.id, {
-				onDelete: "cascade",
-			}),
 		period: shiftPeriodEnum("period").notNull(),
 		start: time("start", { precision: 0 }).notNull(),
 		end: time("end", { precision: 0 }).notNull(),
@@ -86,10 +81,6 @@ export const shiftsRelations = relations(shifts, ({ one }) => ({
 	daySchedule: one(daySchedules, {
 		fields: [shifts.dayScheduleId],
 		references: [daySchedules.id],
-	}),
-	user: one(users, {
-		fields: [shifts.userId],
-		references: [users.id],
 	}),
 }));
 
