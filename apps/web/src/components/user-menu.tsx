@@ -1,10 +1,5 @@
 import { PencilSimpleIcon, SignOutIcon, UserIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@workspace/ui/components/avatar";
 import { Button } from "@workspace/ui/components/button";
 import {
 	DropdownMenu,
@@ -20,11 +15,8 @@ function UserMenu() {
 		<DropdownMenu>
 			<DropdownMenuTrigger
 				render={
-					<Button variant="ghost" size="icon-lg" className="rounded-full">
-						<Avatar>
-							<AvatarImage src="https://github.com/tristan-derez.png" alt="" />
-							<AvatarFallback>TD</AvatarFallback>
-						</Avatar>
+					<Button variant="outline" size="icon-lg" className="rounded-full">
+						TD
 					</Button>
 				}
 			/>
