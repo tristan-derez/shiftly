@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 
 import "@workspace/ui/globals.css";
 
@@ -23,11 +23,14 @@ declare module "@tanstack/react-router" {
 function App() {
 	const { data: authData, isPending } = authClient.useSession();
 
-	if (isPending) {
-		return null;
-	}
+	useEffect(() => {
+		if (isPending) return;
+		router.invalidate();
+	}, [authData, isPending]);
 
-	return <RouterProvider router={router} context={{ authData }} />;
+	return isPending ? null : (
+		<RouterProvider router={router} context={{ authData }} />
+	);
 }
 
 const rootElement = document.getElementById("root")!;
