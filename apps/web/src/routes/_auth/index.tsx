@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { Separator } from "@workspace/ui/components/separator";
 import { Switch } from "@workspace/ui/components/switch";
 import { useState } from "react";
@@ -59,11 +59,14 @@ const week: WeekSchedule[] = [
 
 function Index() {
 	const [showWeekHeader, setShowWeekHeader] = useState(false);
+	const { authData } = useRouteContext({ from: "__root__" });
+
+	if (!authData) return;
 
 	return (
 		<div className="flex flex-col gap-2 lg:gap-6">
 			<div className="flex justify-between">
-				<div>Tristan Derez</div>
+				<div>{authData.user.name}</div>
 				<div className="flex gap-1.5 items-center self-end">
 					<span className="text-sm text-muted-foreground">
 						Afficher les en-têtes de semaines
