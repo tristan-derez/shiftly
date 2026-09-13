@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { HttpServer } from "@effect/platform";
+import { HttpMiddleware, HttpServer } from "@effect/platform";
 import { NodeHttpServer } from "@effect/platform-node";
 import { Effect, Layer } from "effect";
 import { app } from "./app.ts";
@@ -9,8 +9,19 @@ import { DotEnvConfig } from "./env.ts";
 import { DatabaseService } from "./services/database.ts";
 import { PasswordService } from "./services/password.ts";
 
-export const HttpLive = HttpServer.serve(app).pipe(
-	HttpServer.withLogAddress,
+export const HttpLive = Layer.unwrapEffect(
+	Effect.gen(function* () {
+		const config = yield* AppConfig;
+		const httpApp = app.pipe(
+			HttpMiddleware.cors({
+				allowedOrigins: [config.clientUrl],
+				credentials: true,
+			}),
+		);
+
+		return HttpServer.serve(httpApp).pipe(HttpServer.withLogAddress);
+	}),
+).pipe(
 	Layer.provide(
 		Layer.unwrapEffect(
 			Effect.map(AppConfig, (config) =>
