@@ -1,12 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workspace/ui/components/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
-	CardHeader,
 	CardTitle,
 } from "@workspace/ui/components/card";
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
@@ -68,16 +66,19 @@ function Signup() {
 	}
 
 	return (
-		<div className="flex justify-center">
-			<Card className="w-full max-w-sm">
-				<CardHeader>
-					<CardTitle>Inscription</CardTitle>
-					<CardDescription>
-						Créez votre compte pour accéder à vos horaires.
-					</CardDescription>
-				</CardHeader>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<CardContent className="flex flex-col gap-4">
+		<div className="flex min-h-screen items-center justify-center p-4">
+			<Card className="w-full max-w-full md:max-w-2xl xl:max-w-5xl overflow-hidden p-0">
+				<CardContent className="grid xl:min-h-128 p-0 xl:grid-cols-2">
+					<form
+						onSubmit={handleSubmit(onSubmit)}
+						className="flex flex-col justify-center gap-4 p-6 md:p-8"
+					>
+						<div className="flex flex-col items-center gap-2 text-center">
+							<CardTitle>Inscription</CardTitle>
+							<CardDescription>
+								Crée ton compte pour accéder à tes horaires.
+							</CardDescription>
+						</div>
 						<Controller
 							control={control}
 							name="name"
@@ -133,13 +134,24 @@ function Signup() {
 								</Field>
 							)}
 						/>
-					</CardContent>
-					<CardFooter>
 						<Button type="submit" disabled={isSubmitting} className="w-full">
 							{isSubmitting ? "Inscription..." : "S'inscrire"}
 						</Button>
-					</CardFooter>
-				</form>
+						<p className="text-center">
+							Tu as déjà un compte ?{" "}
+							<Link to="/signin" className="underline">
+								Connecte-toi
+							</Link>
+						</p>
+					</form>
+					<div className="relative hidden xl:block bg-muted">
+						<img
+							src="https://images.unsplash.com/photo-1672552226650-796f40198c47?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+							alt=""
+							className="absolute inset-0 h-full w-full object-cover"
+						/>
+					</div>
+				</CardContent>
 			</Card>
 		</div>
 	);

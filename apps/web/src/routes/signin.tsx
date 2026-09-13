@@ -1,12 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workspace/ui/components/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
-	CardHeader,
 	CardTitle,
 } from "@workspace/ui/components/card";
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
@@ -56,16 +54,19 @@ function SignIn() {
 	}
 
 	return (
-		<div className="flex justify-center">
-			<Card className="w-full max-w-sm">
-				<CardHeader>
-					<CardTitle>Connexion</CardTitle>
-					<CardDescription>
-						Connecte-toi pour accéder à tes horaires
-					</CardDescription>
-				</CardHeader>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<CardContent className="flex flex-col gap-4">
+		<div className="flex min-h-screen items-center justify-center p-4">
+			<Card className="w-full max-w-5xl overflow-hidden p-0">
+				<CardContent className="grid xl:min-h-128 p-0 xl:grid-cols-2">
+					<form
+						onSubmit={handleSubmit(onSubmit)}
+						className="flex flex-col justify-center gap-2 p-6 md:p-8"
+					>
+						<div className="flex flex-col items-center gap-2 text-center">
+							<CardTitle>Connexion</CardTitle>
+							<CardDescription>
+								Connecte-toi pour accéder à tes horaires
+							</CardDescription>
+						</div>
 						<Controller
 							control={control}
 							name="username"
@@ -104,13 +105,28 @@ function SignIn() {
 							)}
 						/>
 						<FieldError errors={errors.root ? [errors.root] : undefined} />
-					</CardContent>
-					<CardFooter>
-						<Button type="submit" disabled={isSubmitting} className="w-full">
+						<Button
+							type="submit"
+							disabled={isSubmitting}
+							className="w-full mt-2"
+						>
 							{isSubmitting ? "Connexion..." : "Se connecter"}
 						</Button>
-					</CardFooter>
-				</form>
+						<p className="text-center">
+							Tu n'as pas encore de compte ?{" "}
+							<Link to="/signup" className="underline">
+								Inscris-toi
+							</Link>
+						</p>
+					</form>
+					<div className="relative hidden xl:block bg-muted">
+						<img
+							src="https://images.unsplash.com/photo-1735020886196-bed638cc1809?q=80&w=1082&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+							alt=""
+							className="absolute inset-0 h-full w-full object-cover"
+						/>
+					</div>
+				</CardContent>
 			</Card>
 		</div>
 	);
