@@ -18,6 +18,7 @@
 		"@tanstack/react-router-devtools": "^1.167.1",
 		"@workspace/api": "workspace:*",
 		"@workspace/ui": "workspace:*",
+		"better-auth": "catalog:",
 		"date-fns": "^4.4.0",
 		"effect": "catalog:",
 		"react": "^19.3.0",
