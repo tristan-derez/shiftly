@@ -9,7 +9,8 @@ export class AppConfig extends Effect.Service<AppConfig>()(
 				Config.withDefault("localhost"),
 			);
 			const databaseUrl = yield* Config.string("DATABASE_URL");
-			return { port, host, databaseUrl };
+			const pepperKey = yield* Config.string("PEPPER_KEY");
+			return { port, host, databaseUrl, pepperKey };
 		}),
 	},
 ) {}
