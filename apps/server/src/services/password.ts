@@ -1,8 +1,5 @@
 import { createHmac } from "node:crypto";
-import {
-	hash as argon2Hash,
-	verify as argon2Verify,
-} from "@node-rs/argon2";
+import { hash as argon2Hash, verify as argon2Verify } from "@node-rs/argon2";
 import { Data, Effect, Redacted } from "effect";
 import { AppConfig } from "../config.ts";
 
@@ -10,9 +7,7 @@ export class PasswordHashError extends Data.TaggedError("PasswordHashError")<{
 	cause: unknown;
 }> {}
 
-export class MalformedHashError extends Data.TaggedError(
-	"MalformedHashError",
-)<{
+export class MalformedHashError extends Data.TaggedError("MalformedHashError")<{
 	cause: unknown;
 }> {}
 

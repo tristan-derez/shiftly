@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 
-export const Job = Schema.Literal("F", "Amb", "L1", "L2", "Firam", "Ram");
+export const Job = Schema.Literal("F", "Amb", "L1", "L2", "FRam", "Ram");
 export type Job = typeof Job.Type;
 
 export const DayStatus = Schema.Literal("planned", "rest", "unplanned");

@@ -10,7 +10,19 @@ export class AppConfig extends Effect.Service<AppConfig>()(
 			);
 			const databaseUrl = yield* Config.redacted("DATABASE_URL");
 			const pepperKey = yield* Config.redacted("PEPPER_KEY");
-			return { port, host, databaseUrl, pepperKey };
+			const betterAuthUrl = yield* Config.string("BETTER_AUTH_URL");
+			const betterAuthSecret = yield* Config.redacted("BETTER_AUTH_SECRET");
+			const clientUrl = yield* Config.string("CLIENT_URL");
+
+			return {
+				port,
+				host,
+				databaseUrl,
+				pepperKey,
+				betterAuthUrl,
+				betterAuthSecret,
+				clientUrl,
+			};
 		}),
 	},
 ) {}
