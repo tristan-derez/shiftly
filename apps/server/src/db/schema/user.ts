@@ -10,7 +10,7 @@ export const users = pgTable(
 		name: varchar("name", { length: 100 }).notNull(),
 		username: varchar("username", { length: 30 }).notNull(),
 		email: varchar("email", { length: 254 }),
-		password: text("password").notNull(),
+		password_hash: text("password_hash").notNull(),
 		...timestamps,
 	},
 	(table) => [
