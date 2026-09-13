@@ -8,8 +8,8 @@ export class AppConfig extends Effect.Service<AppConfig>()(
 			const host = yield* Config.string("HOST").pipe(
 				Config.withDefault("localhost"),
 			);
-			const databaseUrl = yield* Config.string("DATABASE_URL");
-			const pepperKey = yield* Config.string("PEPPER_KEY");
+			const databaseUrl = yield* Config.redacted("DATABASE_URL");
+			const pepperKey = yield* Config.redacted("PEPPER_KEY");
 			return { port, host, databaseUrl, pepperKey };
 		}),
 	},

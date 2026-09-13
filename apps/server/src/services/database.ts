@@ -1,4 +1,4 @@
-import { Effect } from "effect";
+import { Effect, Redacted } from "effect";
 import { AppConfig } from "../config.ts";
 import { createDatabaseClient } from "../db/index.ts";
 
@@ -7,7 +7,7 @@ export class DatabaseService extends Effect.Service<DatabaseService>()(
 	{
 		effect: Effect.gen(function* () {
 			const config = yield* AppConfig;
-			const client = createDatabaseClient(config.databaseUrl);
+			const client = createDatabaseClient(Redacted.value(config.databaseUrl));
 			return { client };
 		}),
 		dependencies: [AppConfig.Default],
