@@ -1,6 +1,11 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Nav } from "@/components/nav";
+import type { AuthSession } from "@/lib/auth-client";
+
+interface RouterContext {
+	authData: AuthSession;
+}
 
 const RootLayout = () => (
 	<div className="max-w-270 mx-auto">
@@ -12,4 +17,6 @@ const RootLayout = () => (
 	</div>
 );
 
-export const Route = createRootRoute({ component: RootLayout });
+export const Route = createRootRouteWithContext<RouterContext>()({
+	component: RootLayout,
+});
