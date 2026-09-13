@@ -12,7 +12,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"effect": "^3.22.1"
+		"effect": "catalog:"
 	},
 	"devDependencies": {
 		"typescript": "^7.0.2"

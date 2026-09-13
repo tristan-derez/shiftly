@@ -2,6 +2,11 @@ packages:
   - "apps/*"
   - "packages/*"
 
+catalog:
+  effect: ^3.22.2
+  "@effect/platform": ^0.97.2
+  "@effect/platform-node": ^0.108.2
+
 minimumReleaseAge: 4320
 
 allowBuilds:

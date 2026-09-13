@@ -15,16 +15,16 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
-		"@effect/platform": "^0.97.1",
-		"@effect/platform-node": "^0.108.1",
-		"@node-rs/argon2": "^2.2.0",
+		"@effect/platform": "catalog:",
+		"@effect/platform-node": "catalog:",
+		"@node-rs/argon2": "^2.2.1",
 		"@workspace/api": "workspace:*",
 		"drizzle-orm": "^0.45.2",
-		"effect": "^3.22.1",
+		"effect": "catalog:",
 		"postgres": "^3.4.9"
 	},
 	"devDependencies": {
-		"@types/node": "^26",
+		"@types/node": "^26.5.1",
 		"drizzle-kit": "^0.31.10",
 		"typescript": "^7.0.2"
 	}
