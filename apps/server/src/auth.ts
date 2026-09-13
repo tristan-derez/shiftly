@@ -4,6 +4,7 @@ import { username } from "better-auth/plugins";
 import { Context, Data, Effect, Redacted } from "effect";
 import { AppConfig } from "./config.ts";
 import { authSchema } from "./db/schema/auth.ts";
+import { AvatarService } from "./services/avatar.ts";
 import { DatabaseService } from "./services/database.ts";
 import { PasswordService } from "./services/password.ts";
 
@@ -48,6 +49,7 @@ export class AuthService extends Effect.Service<AuthService>()(
 			const config = yield* AppConfig;
 			const database = yield* DatabaseService;
 			const password = yield* PasswordService;
+			const avatar = yield* AvatarService;
 
 			const auth = betterAuth({
 				baseURL: config.betterAuthUrl,
@@ -78,6 +80,24 @@ export class AuthService extends Effect.Service<AuthService>()(
 						displayUsername: false,
 					}),
 				],
+				databaseHooks: {
+					user: {
+						create: {
+							before: async (user) => {
+								const seed =
+									(user.username as string | undefined) ??
+									user.name ??
+									user.email;
+								return {
+									data: {
+										...user,
+										image: avatar.generate(seed),
+									},
+								};
+							},
+						},
+					},
+				},
 				advanced: {
 					database: {
 						generateId: false,
@@ -91,6 +111,7 @@ export class AuthService extends Effect.Service<AuthService>()(
 			AppConfig.Default,
 			DatabaseService.Default,
 			PasswordService.Default,
+			AvatarService.Default,
 		],
 	},
 ) {}
