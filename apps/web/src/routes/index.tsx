@@ -33,7 +33,7 @@ const week: WeekSchedule[] = [
 			{
 				date: "2026-08-27",
 				status: "planned",
-				morning: { start: "9:00", end: "12:30", job: "Firam" },
+				morning: { start: "9:00", end: "12:30", job: "FRam" },
 				afternoon: { start: "14:00", end: "18:00", job: "L2" },
 			},
 			{
