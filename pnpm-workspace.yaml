@@ -6,6 +6,7 @@ catalog:
   effect: ^3.22.2
   "@effect/platform": ^0.97.2
   "@effect/platform-node": ^0.108.2
+  better-auth: ^1.7.4
 
 minimumReleaseAge: 4320
 
