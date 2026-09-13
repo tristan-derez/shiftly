@@ -1,6 +1,5 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { Toaster } from "@workspace/ui/components/toast";
 import { cn } from "@workspace/ui/lib/utils";
 import { Nav } from "@/components/nav";
 import type { AuthSession } from "@/lib/auth-client";
@@ -17,7 +16,6 @@ const RootLayout = () => {
 			<Nav />
 			<div className={cn("px-2", authData && "pt-8 lg:pt-20")}>
 				<Outlet />
-				<Toaster />
 			</div>
 			<TanStackRouterDevtools />
 		</div>

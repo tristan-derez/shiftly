@@ -1,12 +1,10 @@
 import { StrictMode, useEffect } from "react";
-
 import "@workspace/ui/globals.css";
-
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { Toaster } from "@workspace/ui/components/toast";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { authClient } from "@/lib/auth-client";
-
 import { routeTree } from "./routeTree.gen";
 
 const router = createRouter({
@@ -40,6 +38,7 @@ if (!rootElement.innerHTML) {
 		<StrictMode>
 			<ThemeProvider>
 				<App />
+				<Toaster />
 			</ThemeProvider>
 		</StrictMode>,
 	);
