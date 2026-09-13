@@ -2,14 +2,14 @@ import type { DayStatus, Job } from "@workspace/api";
 import { relations, sql } from "drizzle-orm";
 import { date, pgEnum, pgTable, time, unique, uuid } from "drizzle-orm/pg-core";
 import { timestamps } from "./helpers.ts";
-import { users } from "./user.ts";
+import { user } from "./user.ts";
 
 const jobValues = [
 	"F",
 	"Amb",
 	"L1",
 	"L2",
-	"Firam",
+	"FRam",
 	"Ram",
 ] as const satisfies readonly Job[];
 
@@ -31,7 +31,7 @@ export const daySchedules = pgTable(
 		id: uuid("id").primaryKey().default(sql`uuidv7()`),
 		userId: uuid("user_id")
 			.notNull()
-			.references(() => users.id, {
+			.references(() => user.id, {
 				onDelete: "cascade",
 			}),
 		date: date("date").notNull(),
@@ -69,9 +69,9 @@ export const shifts = pgTable(
 export const daySchedulesRelations = relations(
 	daySchedules,
 	({ one, many }) => ({
-		user: one(users, {
+		user: one(user, {
 			fields: [daySchedules.userId],
-			references: [users.id],
+			references: [user.id],
 		}),
 		shifts: many(shifts),
 	}),
