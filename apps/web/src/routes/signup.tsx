@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Button } from "@workspace/ui/components/button";
 import {
 	Card,
@@ -9,6 +9,7 @@ import {
 } from "@workspace/ui/components/card";
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
+import { toast } from "@workspace/ui/components/toast";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { authClient } from "@/lib/auth-client";
@@ -31,15 +32,18 @@ type SignupFormValues = z.infer<typeof signupFormSchema>;
 
 export const Route = createFileRoute("/signup")({
 	component: Signup,
+	beforeLoad: ({ context }) => {
+		if (context.authData?.user) {
+			throw redirect({ to: "/" });
+		}
+	},
 });
 
 function Signup() {
-	const navigate = useNavigate();
 	const {
 		control,
 		handleSubmit,
 		formState: { isSubmitting },
-		setError,
 	} = useForm<SignupFormValues>({
 		resolver: zodResolver(signupFormSchema),
 		defaultValues: {
@@ -50,7 +54,7 @@ function Signup() {
 	});
 
 	async function onSubmit(values: SignupFormValues) {
-		const { error } = await authClient.signUp.email({
+		const { data, error } = await authClient.signUp.email({
 			name: values.name,
 			email: `${values.username}@dreyz.cloud`,
 			username: values.username,
@@ -58,11 +62,19 @@ function Signup() {
 		});
 
 		if (error) {
-			setError("root", { message: error.message ?? "Une erreur est survenue" });
+			toast.add({
+				title: "Oops !",
+				description: "Une erreur est survenue",
+				type: "error",
+			});
 			return;
 		}
 
-		navigate({ to: "/" });
+		toast.add({
+			title: "Compte créé",
+			description: `Bienvenue ${data.user.name.split(" ")[0]} !`,
+			type: "success",
+		});
 	}
 
 	return (
