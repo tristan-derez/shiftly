@@ -15,10 +15,13 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
+		"@dicebear/core": "^10.7.0",
+		"@dicebear/styles": "^10.6.0",
 		"@effect/platform": "catalog:",
 		"@effect/platform-node": "catalog:",
 		"@node-rs/argon2": "^2.2.1",
 		"@workspace/api": "workspace:*",
+		"better-auth": "catalog:",
 		"drizzle-orm": "^0.45.2",
 		"effect": "catalog:",
 		"postgres": "^3.4.9"
