@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Button } from "@workspace/ui/components/button";
 import {
 	Card,
@@ -9,6 +9,7 @@ import {
 } from "@workspace/ui/components/card";
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
+import { toast } from "@workspace/ui/components/toast";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { authClient } from "@/lib/auth-client";
@@ -25,15 +26,18 @@ type SigninFormValues = z.infer<typeof signinFormSchema>;
 
 export const Route = createFileRoute("/signin")({
 	component: SignIn,
+	beforeLoad: ({ context }) => {
+		if (context.authData?.user) {
+			throw redirect({ to: "/" });
+		}
+	},
 });
 
 function SignIn() {
-	const navigate = useNavigate();
 	const {
 		control,
 		handleSubmit,
-		formState: { errors, isSubmitting },
-		setError,
+		formState: { isSubmitting },
 	} = useForm<SigninFormValues>({
 		resolver: zodResolver(signinFormSchema),
 		defaultValues: {
@@ -43,14 +47,23 @@ function SignIn() {
 	});
 
 	async function onSubmit(values: SigninFormValues) {
-		const { error } = await authClient.signIn.username(values);
-
+		const { data, error } = await authClient.signIn.username(values);
 		if (error) {
-			setError("root", { message: error.message ?? "Une erreur est survenue" });
+			toast.add({
+				title: "Oops !",
+				description: error.message
+					? "Nom d'utilisateur ou mot de passe incorrect"
+					: "Une erreur est survenue",
+				type: "error",
+			});
 			return;
 		}
 
-		navigate({ to: "/" });
+		toast.add({
+			title: "Connexion réussie",
+			description: `Hello ${data.user.name.split(" ")[0]}`,
+			type: "success",
+		});
 	}
 
 	return (
@@ -104,7 +117,6 @@ function SignIn() {
 								</Field>
 							)}
 						/>
-						<FieldError errors={errors.root ? [errors.root] : undefined} />
 						<Button
 							type="submit"
 							disabled={isSubmitting}
