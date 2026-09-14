@@ -1,0 +1,31 @@
+FROM node:26-bookworm-slim AS build
+
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+
+RUN corepack enable
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY tsconfig.json tsconfig.json
+COPY apps/server/package.json apps/server/package.json
+COPY apps/web/package.json apps/web/package.json
+COPY packages/api/package.json packages/api/package.json
+COPY packages/ui/package.json packages/ui/package.json
+COPY node_modules node_modules
+
+RUN pnpm install --frozen-lockfile
+
+COPY apps/web apps/web
+COPY packages/api packages/api
+COPY packages/ui packages/ui
+
+RUN pnpm exec tsc -b apps/web/tsconfig.json && pnpm exec vite build apps/web
+
+FROM caddy:2.11.4-alpine
+
+COPY --from=build /app/apps/web/dist /srv
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 80
