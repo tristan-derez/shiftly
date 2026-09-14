@@ -13,7 +13,6 @@ COPY apps/server/package.json apps/server/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY packages/api/package.json packages/api/package.json
 COPY packages/ui/package.json packages/ui/package.json
-COPY node_modules node_modules
 
 RUN pnpm install --frozen-lockfile
 
