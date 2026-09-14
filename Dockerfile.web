@@ -20,7 +20,7 @@ COPY apps/web apps/web
 COPY packages/api packages/api
 COPY packages/ui packages/ui
 
-RUN pnpm exec tsc -b apps/web/tsconfig.json && pnpm exec vite build apps/web
+RUN pnpm --filter web build
 
 FROM caddy:2.11.4-alpine
 
@@ -28,3 +28,4 @@ COPY --from=build /app/apps/web/dist /srv
 COPY deploy/Caddyfile /etc/caddy/Caddyfile
 
 EXPOSE 80
+
