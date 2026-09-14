@@ -66,6 +66,7 @@ function SignIn() {
 		}
 
 		await refreshSession();
+		await router.invalidate();
 		await router.navigate({ to: "/" });
 
 		toast.add({

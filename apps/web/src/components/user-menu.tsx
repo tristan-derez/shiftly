@@ -31,6 +31,7 @@ function UserMenu() {
 				(async () => {
 					await authClient.signOut();
 					setSessionCache(null);
+					await router.invalidate();
 					await router.navigate({ to: "/signin" });
 				})(),
 				{
