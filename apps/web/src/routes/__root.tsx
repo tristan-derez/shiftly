@@ -1,20 +1,19 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { cn } from "@workspace/ui/lib/utils";
 import { Nav } from "@/components/nav";
-import type { AuthSession } from "@/lib/auth-client";
+import { NotFound } from "@/components/not-found";
+import { RouteLoading } from "@/components/route-loading";
+import { type AuthSession, fetchSession } from "@/lib/auth-client";
 
 interface RouterContext {
 	authData: AuthSession;
 }
 
 const RootLayout = () => {
-	const { authData } = Route.useRouteContext();
-
 	return (
-		<div className="max-w-270 mx-auto">
+		<div className="flex min-h-svh flex-col px-3 lg:px-0 lg:mx-auto max-w-5xl">
 			<Nav />
-			<div className={cn("px-2", authData && "pt-8 lg:pt-20")}>
+			<div className="flex flex-1 flex-col gap-2">
 				<Outlet />
 			</div>
 			<TanStackRouterDevtools />
@@ -24,4 +23,10 @@ const RootLayout = () => {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootLayout,
+	beforeLoad: async () => {
+		const authData = await fetchSession();
+		return { authData };
+	},
+	pendingComponent: RouteLoading,
+	notFoundComponent: NotFound,
 });

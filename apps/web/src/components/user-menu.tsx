@@ -1,5 +1,5 @@
 import { PencilSimpleIcon, SignOutIcon, UserIcon } from "@phosphor-icons/react";
-import { Link, useRouteContext } from "@tanstack/react-router";
+import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
 import {
 	Avatar,
 	AvatarFallback,
@@ -15,23 +15,34 @@ import {
 	DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import { toast } from "@workspace/ui/components/toast";
-import { authClient } from "@/lib/auth-client";
+import { authClient, setSessionCache } from "@/lib/auth-client";
 
 function UserMenu() {
+	const router = useRouter();
 	const { authData } = useRouteContext({ from: "__root__" });
 
 	if (!authData) {
 		return null;
 	}
 
-	async function handleSignOut() {
-		await authClient.signOut();
-
-		toast.add({
-			title: "Déconnexion réussie",
-			description: "À bientôt !",
-			type: "success",
-		});
+	function handleSignOut() {
+		void toast
+			.promise(
+				(async () => {
+					await authClient.signOut();
+					setSessionCache(null);
+					await router.navigate({ to: "/signin" });
+				})(),
+				{
+					loading: { title: "Déconnexion..." },
+					success: { title: "Déconnexion réussie", description: "À bientôt !" },
+					error: {
+						title: "Oups !",
+						description: "Quelque chose s'est mal passé, réessaie",
+					},
+				},
+			)
+			.catch(() => {});
 	}
 
 	const { user } = authData;
