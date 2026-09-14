@@ -1,15 +1,18 @@
-import { StrictMode, useEffect } from "react";
+import { StrictMode } from "react";
 import "@workspace/ui/globals.css";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { Toaster } from "@workspace/ui/components/toast";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
-import { authClient } from "@/lib/auth-client";
 import { routeTree } from "./routeTree.gen";
 
 const router = createRouter({
 	routeTree,
 	context: { authData: null },
+	defaultPreload: "intent",
+	defaultPreloadStaleTime: 30_000,
+	defaultPendingMs: 200,
+	defaultPendingMinMs: 200,
 });
 
 declare module "@tanstack/react-router" {
@@ -19,16 +22,7 @@ declare module "@tanstack/react-router" {
 }
 
 function App() {
-	const { data: authData, isPending } = authClient.useSession();
-
-	useEffect(() => {
-		if (isPending) return;
-		router.invalidate();
-	}, [authData, isPending]);
-
-	return isPending ? null : (
-		<RouterProvider router={router} context={{ authData }} />
-	);
+	return <RouterProvider router={router} context={{ authData: null }} />;
 }
 
 const rootElement = document.getElementById("root")!;
