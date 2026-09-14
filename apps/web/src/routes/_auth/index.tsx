@@ -65,10 +65,10 @@ function Index() {
 
 	return (
 		<div className="flex flex-col gap-2 lg:gap-6 pt-4 pb-8">
-			<div className="flex justify-between">
+			<div className="flex justify-between font-bold text-sm lg:text-md">
 				<div>{authData.user.name}</div>
 				<div className="flex gap-1.5 items-center self-end">
-					<span className="text-sm text-muted-foreground">
+					<span className="text-xs md:text-sm text-muted-foreground">
 						Afficher les en-têtes de semaines
 					</span>
 					<Switch
