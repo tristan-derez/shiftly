@@ -61,10 +61,10 @@ function Index() {
 	const [showWeekHeader, setShowWeekHeader] = useState(false);
 	const { authData } = useRouteContext({ from: "__root__" });
 
-	if (!authData) return;
+	if (!authData?.user) return null;
 
 	return (
-		<div className="flex flex-col gap-2 lg:gap-6">
+		<div className="flex flex-col gap-2 lg:gap-6 pt-4 pb-8">
 			<div className="flex justify-between">
 				<div>{authData.user.name}</div>
 				<div className="flex gap-1.5 items-center self-end">
