@@ -1,5 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	redirect,
+	useRouter,
+} from "@tanstack/react-router";
 import { Button } from "@workspace/ui/components/button";
 import {
 	Card,
@@ -12,7 +17,7 @@ import { Input } from "@workspace/ui/components/input";
 import { toast } from "@workspace/ui/components/toast";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { authClient } from "@/lib/auth-client";
+import { authClient, refreshSession } from "@/lib/auth-client";
 
 const signupFormSchema = z.object({
 	name: z
@@ -40,6 +45,7 @@ export const Route = createFileRoute("/signup")({
 });
 
 function Signup() {
+	const router = useRouter();
 	const {
 		control,
 		handleSubmit,
@@ -70,6 +76,9 @@ function Signup() {
 			return;
 		}
 
+		await refreshSession();
+		await router.navigate({ to: "/" });
+
 		toast.add({
 			title: "Compte créé",
 			description: `Bienvenue ${data.user.name.split(" ")[0]} !`,
@@ -78,7 +87,7 @@ function Signup() {
 	}
 
 	return (
-		<div className="flex min-h-screen items-center justify-center p-4">
+		<div className="flex min-h-screen items-center justify-center">
 			<Card className="w-full max-w-full md:max-w-2xl xl:max-w-5xl overflow-hidden p-0">
 				<CardContent className="grid xl:min-h-128 p-0 xl:grid-cols-2">
 					<form

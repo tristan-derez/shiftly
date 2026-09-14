@@ -7,3 +7,31 @@ export const authClient = createAuthClient({
 });
 
 export type AuthSession = ReturnType<typeof authClient.useSession>["data"];
+
+let cachedSessionPromise: Promise<AuthSession> | null = null;
+
+export function fetchSession(): Promise<AuthSession> {
+	if (!cachedSessionPromise) {
+		cachedSessionPromise = authClient
+			.getSession()
+			.then(({ data }) => data ?? null)
+			.catch(() => {
+				cachedSessionPromise = null;
+				return null;
+			});
+	}
+	return cachedSessionPromise;
+}
+
+export function invalidateSessionCache(): void {
+	cachedSessionPromise = null;
+}
+
+export function setSessionCache(session: AuthSession): void {
+	cachedSessionPromise = Promise.resolve(session);
+}
+
+export async function refreshSession(): Promise<AuthSession> {
+	invalidateSessionCache();
+	return fetchSession();
+}
