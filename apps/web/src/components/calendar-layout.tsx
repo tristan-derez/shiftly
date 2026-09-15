@@ -11,7 +11,7 @@ import { fr } from "date-fns/locale";
 import { DayCard } from "@/components/day-card";
 
 type CalendarLayoutProps = {
-	weeks?: WeekSchedule[];
+	weeks?: readonly WeekSchedule[];
 	showWeekHeader?: boolean; // showWeekHeader display the week number and date range
 };
 
@@ -19,8 +19,7 @@ function capitalize(value: string): string {
 	return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-// Fills a week's days with "unplanned" for any date missing from `days`.
-// `days` is expected to be sparse: only planned/rest days come from the backend.
+// Keeps the calendar grid complete if a consumer provides a partial week.
 function fillWeekDays(weekStart: Date, days: DaySchedule[]): DaySchedule[] {
 	const daysByDate = new Map(days.map((day) => [day.date, day]));
 

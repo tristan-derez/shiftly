@@ -30,6 +30,6 @@ export const WeekSchedule = Schema.Struct({
 export type WeekSchedule = typeof WeekSchedule.Type;
 
 export const CurrentScheduleResponse = Schema.Struct({
-	week: WeekSchedule,
+	weeks: Schema.Array(WeekSchedule),
 });
 export type CurrentScheduleResponse = typeof CurrentScheduleResponse.Type;
