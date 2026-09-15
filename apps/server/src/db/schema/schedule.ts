@@ -11,6 +11,7 @@ const jobValues = [
 	"L2",
 	"FRam",
 	"Ram",
+	"DPH",
 ] as const satisfies readonly Job[];
 
 export const jobEnum = pgEnum("job", jobValues);
@@ -55,7 +56,7 @@ export const shifts = pgTable(
 		period: shiftPeriodEnum("period").notNull(),
 		start: time("start", { precision: 0 }).notNull(),
 		end: time("end", { precision: 0 }).notNull(),
-		job: jobEnum("job").notNull(),
+		job: jobEnum("job"),
 		...timestamps,
 	},
 	(table) => [

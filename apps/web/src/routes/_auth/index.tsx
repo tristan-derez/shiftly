@@ -1,67 +1,23 @@
+import { CircleNotchIcon } from "@phosphor-icons/react";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { Separator } from "@workspace/ui/components/separator";
 import { Switch } from "@workspace/ui/components/switch";
 import { useState } from "react";
-import {
-	CalendarLayout,
-	type WeekSchedule,
-} from "@/components/calendar-layout";
+import { CalendarLayout } from "@/components/calendar-layout";
+import { useCurrentSchedule } from "@/queries/schedule";
 
 export const Route = createFileRoute("/_auth/")({
 	component: Index,
 });
 
-const week: WeekSchedule[] = [
-	{
-		weekNumber: 35,
-		startDate: "2026-08-24",
-		endDate: "2026-08-30",
-		days: [
-			{
-				date: "2026-08-24",
-				status: "planned",
-				morning: { start: "9:00", end: "13:00", job: "F" },
-				afternoon: { start: "14:00", end: "18:00", job: "Amb" },
-			},
-			{
-				date: "2026-08-25",
-				status: "planned",
-				morning: { start: "8:00", end: "12:00", job: "L1" },
-				afternoon: { start: "13:00", end: "16:45", job: "Ram" },
-			},
-			{ date: "2026-08-26", status: "rest", morning: null, afternoon: null },
-			{
-				date: "2026-08-27",
-				status: "planned",
-				morning: { start: "9:00", end: "12:30", job: "FRam" },
-				afternoon: { start: "14:00", end: "18:00", job: "L2" },
-			},
-			{
-				date: "2026-08-28",
-				status: "planned",
-				morning: { start: "9:00", end: "13:00", job: "Ram" },
-				afternoon: { start: "14:00", end: "17:15", job: "F" },
-			},
-			{
-				date: "2026-08-29",
-				status: "planned",
-				morning: { start: "8:00", end: "12:00", job: "Amb" },
-				afternoon: null,
-			},
-			{ date: "2026-08-30", status: "rest", morning: null, afternoon: null },
-		],
-	},
-	{ weekNumber: 36, startDate: "2026-08-31", endDate: "2026-09-06", days: [] },
-	{ weekNumber: 37, startDate: "2026-09-07", endDate: "2026-09-13", days: [] },
-	{ weekNumber: 38, startDate: "2026-09-14", endDate: "2026-09-20", days: [] },
-	{ weekNumber: 39, startDate: "2026-09-21", endDate: "2026-09-27", days: [] },
-];
-
 function Index() {
 	const [showWeekHeader, setShowWeekHeader] = useState(false);
 	const { authData } = useRouteContext({ from: "__root__" });
+	const scheduleQuery = useCurrentSchedule();
 
 	if (!authData?.user) return null;
+	if (scheduleQuery.isError)
+		return <div>Erreur lors du chargement du planning</div>;
 
 	return (
 		<div className="flex flex-col gap-2 lg:gap-6 pt-4 pb-8">
@@ -79,7 +35,20 @@ function Index() {
 				</div>
 			</div>
 			<Separator />
-			<CalendarLayout showWeekHeader={showWeekHeader} weeks={week} />
+			{scheduleQuery.isPending ? (
+				<div
+					className="flex justify-center py-8  text-primary"
+					aria-label="Chargement"
+				>
+					<CircleNotchIcon className="size-6 animate-spin" aria-hidden="true" />
+				</div>
+			) : null}
+			{scheduleQuery.data ? (
+				<CalendarLayout
+					showWeekHeader={showWeekHeader}
+					weeks={scheduleQuery.data.weeks}
+				/>
+			) : null}
 		</div>
 	);
 }

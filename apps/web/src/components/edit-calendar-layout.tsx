@@ -8,18 +8,20 @@ import {
 	startOfWeek,
 } from "date-fns";
 import { fr } from "date-fns/locale";
-import { DayCard } from "@/components/day-card";
+import type { Control } from "react-hook-form";
+import { EditDayCard } from "@/components/edit-day-card";
+import type { ScheduleFormValues } from "@/lib/schedule";
 
-type CalendarLayoutProps = {
+type EditCalendarLayoutProps = {
 	weeks?: readonly WeekSchedule[];
-	showWeekHeader?: boolean; // showWeekHeader display the week number and date range
+	showWeekHeader?: boolean;
+	control: Control<ScheduleFormValues>;
 };
 
 function capitalize(value: string): string {
 	return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-// Keeps the calendar grid complete if a consumer provides a partial week.
 function fillWeekDays(weekStart: Date, days: DaySchedule[]): DaySchedule[] {
 	const daysByDate = new Map(days.map((day) => [day.date, day]));
 
@@ -51,10 +53,11 @@ function getUnplannedWeek(weekStart: Date): WeekSchedule {
 	};
 }
 
-function CalendarLayout({
+function EditCalendarLayout({
 	weeks,
 	showWeekHeader = false,
-}: CalendarLayoutProps) {
+	control,
+}: EditCalendarLayoutProps) {
 	const currentWeekStart = startOfWeek(new Date(), {
 		weekStartsOn: 1,
 	});
@@ -77,6 +80,13 @@ function CalendarLayout({
 			),
 		) ?? [];
 
+	const indexedWeeks = calendarWeeks.map((week, weekIndex) => ({
+		week,
+		startIndex: calendarWeeks
+			.slice(0, weekIndex)
+			.reduce((total, current) => total + current.days.length, 0),
+	}));
+
 	return (
 		<div>
 			{!showWeekHeader ? (
@@ -88,7 +98,7 @@ function CalendarLayout({
 			) : null}
 
 			<div className="flex flex-col gap-2">
-				{calendarWeeks.map((week) => (
+				{indexedWeeks.map(({ week, startIndex }) => (
 					<section key={week.startDate}>
 						{showWeekHeader ? (
 							<div className="mb-2">
@@ -106,9 +116,11 @@ function CalendarLayout({
 						) : null}
 
 						<div className="grid grid-cols-1 gap-2 lg:grid-cols-7">
-							{week.days.map((day) => (
-								<DayCard
+							{week.days.map((day, dayIndex) => (
+								<EditDayCard
 									key={day.date}
+									control={control}
+									index={startIndex + dayIndex}
 									day={day}
 									showWeekHeader={showWeekHeader}
 								/>
@@ -121,5 +133,5 @@ function CalendarLayout({
 	);
 }
 
-export type { CalendarLayoutProps, WeekSchedule };
-export { CalendarLayout };
+export type { EditCalendarLayoutProps };
+export { EditCalendarLayout };

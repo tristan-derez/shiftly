@@ -1,4 +1,9 @@
-import { PencilSimpleIcon, SignOutIcon, UserIcon } from "@phosphor-icons/react";
+import {
+	ClockIcon,
+	PencilSimpleIcon,
+	SignOutIcon,
+	UserIcon,
+} from "@phosphor-icons/react";
 import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
 import {
 	Avatar,
@@ -66,11 +71,15 @@ function UserMenu() {
 					</Button>
 				}
 			/>
-			<DropdownMenuContent align="end" className="w-36">
+			<DropdownMenuContent align="end" className="w-45">
 				<DropdownMenuGroup>
 					<DropdownMenuItem>
 						<UserIcon />
 						Compte
+					</DropdownMenuItem>
+					<DropdownMenuItem render={<Link to="/" />}>
+						<ClockIcon />
+						Accéder aux horaires
 					</DropdownMenuItem>
 					<DropdownMenuItem render={<Link to="/edit" />}>
 						<PencilSimpleIcon />

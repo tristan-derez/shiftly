@@ -1,0 +1,1 @@
+ALTER TABLE "shifts" ALTER COLUMN "job" DROP NOT NULL;

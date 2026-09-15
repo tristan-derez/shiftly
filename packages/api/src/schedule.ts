@@ -1,6 +1,8 @@
 import { Schema } from "effect";
 
-export const Job = Schema.Literal("F", "Amb", "L1", "L2", "FRam", "Ram");
+export const jobs = ["F", "Amb", "L1", "L2", "FRam", "Ram", "DPH"] as const;
+
+export const Job = Schema.Literal(...jobs);
 export type Job = typeof Job.Type;
 
 export const DayStatus = Schema.Literal("planned", "rest", "unplanned");
@@ -9,7 +11,7 @@ export type DayStatus = typeof DayStatus.Type;
 export const Shift = Schema.Struct({
 	start: Schema.String,
 	end: Schema.String,
-	job: Job,
+	job: Schema.NullOr(Job),
 });
 export type Shift = typeof Shift.Type;
 
@@ -28,3 +30,13 @@ export const WeekSchedule = Schema.Struct({
 	days: Schema.mutable(Schema.Array(DaySchedule)),
 });
 export type WeekSchedule = typeof WeekSchedule.Type;
+
+export const CurrentScheduleResponse = Schema.Struct({
+	weeks: Schema.Array(WeekSchedule),
+});
+export type CurrentScheduleResponse = typeof CurrentScheduleResponse.Type;
+
+export const CalendarScheduleUpdate = Schema.Struct({
+	days: Schema.Array(DaySchedule),
+});
+export type CalendarScheduleUpdate = typeof CalendarScheduleUpdate.Type;

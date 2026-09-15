@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import "@workspace/ui/globals.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { Toaster } from "@workspace/ui/components/toast";
 import ReactDOM from "react-dom/client";
@@ -14,6 +15,8 @@ const router = createRouter({
 	defaultPendingMs: 200,
 	defaultPendingMinMs: 200,
 });
+
+const queryClient = new QueryClient();
 
 declare module "@tanstack/react-router" {
 	interface Register {
@@ -31,7 +34,9 @@ if (!rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<ThemeProvider>
-				<App />
+				<QueryClientProvider client={queryClient}>
+					<App />
+				</QueryClientProvider>
 				<Toaster />
 			</ThemeProvider>
 		</StrictMode>,
