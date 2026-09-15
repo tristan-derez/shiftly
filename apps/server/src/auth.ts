@@ -4,6 +4,7 @@ import { username } from "better-auth/plugins";
 import { Context, Data, Effect, Redacted } from "effect";
 import { AppConfig } from "./config.ts";
 import { authSchema } from "./db/schema/auth.ts";
+import { daySchedules } from "./db/schema/schedule.ts";
 import { AvatarService } from "./services/avatar.ts";
 import { DatabaseService } from "./services/database.ts";
 import { PasswordService } from "./services/password.ts";
@@ -94,6 +95,26 @@ export class AuthService extends Effect.Service<AuthService>()(
 										image: avatar.generate(seed),
 									},
 								};
+							},
+							after: async (user) => {
+								const start = new Date();
+								const day = start.getUTCDay();
+								start.setUTCDate(
+									start.getUTCDate() - (day === 0 ? 6 : day - 1),
+								);
+								await database.client
+									.insert(daySchedules)
+									.values(
+										Array.from({ length: 35 }, (_, index) => {
+											const date = new Date(start);
+											date.setUTCDate(start.getUTCDate() + index);
+											return {
+												userId: user.id,
+												date: date.toISOString().slice(0, 10),
+											};
+										}),
+									)
+									.onConflictDoNothing();
 							},
 						},
 					},

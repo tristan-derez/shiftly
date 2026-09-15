@@ -11,6 +11,7 @@ const jobValues = [
 	"L2",
 	"FRam",
 	"Ram",
+	"DPH",
 ] as const satisfies readonly Job[];
 
 export const jobEnum = pgEnum("job", jobValues);
