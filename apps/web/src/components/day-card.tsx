@@ -96,7 +96,12 @@ function DayCard({ day, showWeekHeader = false }: DayCardProps) {
 		>
 			<CardHeader className="text-center text-sm">
 				<CardTitle>
-					{showWeekHeader ? `${weekday} ${fullDate}` : fullDate}
+					<span className="lg:hidden">
+						{weekday} {fullDate}
+					</span>
+					<span className="hidden lg:inline">
+						{showWeekHeader ? `${weekday} ${fullDate}` : fullDate}
+					</span>
 				</CardTitle>
 
 				{day.status === "planned" ? (
