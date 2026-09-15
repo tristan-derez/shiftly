@@ -2,7 +2,6 @@ import { CircleNotchIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@workspace/ui/components/button";
 import { Separator } from "@workspace/ui/components/separator";
-import { Switch } from "@workspace/ui/components/switch";
 import { toast } from "@workspace/ui/components/toast";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,7 +21,6 @@ export const Route = createFileRoute("/_auth/edit")({
 });
 
 function Edit() {
-	const [showWeekHeader, setShowWeekHeader] = useState(false);
 	const [ready, setReady] = useState(false);
 	const scheduleQuery = useCurrentSchedule();
 	const updateCalendar = useUpdateCalendarSchedule();
@@ -62,16 +60,13 @@ function Edit() {
 			>
 				<div className="flex justify-between font-bold text-sm lg:text-md">
 					<div>Modifier mes horaires</div>
-					<div className="flex gap-1.5 items-center self-end">
-						<span className="text-xs md:text-sm text-muted-foreground">
-							Afficher les en-têtes de semaines
-						</span>
-						<Switch
-							checked={showWeekHeader}
-							onCheckedChange={setShowWeekHeader}
-							aria-label="Afficher les en-têtes de semaines"
-						/>
-					</div>
+					<Button
+						type="submit"
+						disabled={updateCalendar.isPending}
+						className="self-end"
+					>
+						{updateCalendar.isPending ? "Enregistrement..." : "Enregistrer"}
+					</Button>
 				</div>
 				<Separator />
 
@@ -88,21 +83,15 @@ function Edit() {
 				) : null}
 
 				{scheduleQuery.data && ready ? (
-					<EditCalendarLayout
-						showWeekHeader={showWeekHeader}
-						weeks={scheduleQuery.data.weeks}
-						control={control}
-					/>
-				) : null}
-
-				{scheduleQuery.data && ready ? (
-					<Button
-						type="submit"
-						disabled={updateCalendar.isPending}
-						className="self-end"
-					>
-						{updateCalendar.isPending ? "Enregistrement..." : "Enregistrer"}
-					</Button>
+					<>
+						<div className="order-2">
+							<EditCalendarLayout
+								showWeekHeader
+								weeks={scheduleQuery.data.weeks}
+								control={control}
+							/>
+						</div>
+					</>
 				) : null}
 			</form>
 		</div>
