@@ -100,13 +100,33 @@ const currentSchedule = Effect.gen(function* () {
 		days: [...byDate.values()],
 	};
 
-	return yield* HttpServerResponse.schemaJson(CurrentScheduleResponse)({
-		week,
+	const weeks = Array.from({ length: 5 }, (_, weekIndex) => {
+		const weekStart = new Date(start);
+		weekStart.setUTCDate(start.getUTCDate() + weekIndex * 7);
+		const weekEnd = new Date(weekStart);
+		weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
+
+		return {
+			weekNumber: getWeekNumber(weekStart),
+			startDate: dateOnly(weekStart),
+			endDate: dateOnly(weekEnd),
+			days: week.days.slice(weekIndex * 7, weekIndex * 7 + 7),
+		};
 	});
+
+	return yield* Effect.annotateLogsScoped("username", user.username).pipe(
+		Effect.zipRight(
+			HttpServerResponse.schemaJson(CurrentScheduleResponse)({
+				weeks,
+			}),
+		),
+	);
 }).pipe(
 	Effect.tap(() => Effect.logInfo("Current schedule retrieved")),
 	Effect.catchAll((error) =>
-		Effect.logError("Failed to retrieve current schedule", error).pipe(
+		Effect.logError("Failed to retrieve current schedule", {
+			error,
+		}).pipe(
 			Effect.as(
 				HttpServerResponse.unsafeJson(
 					{ message: "Internal Server Error" },
