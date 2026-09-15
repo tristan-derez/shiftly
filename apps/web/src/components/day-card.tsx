@@ -70,7 +70,12 @@ function DayCard({ day, showWeekHeader = false }: DayCardProps) {
 		return (
 			<div className="flex h-9 flex-col items-center justify-center text-xs">
 				<span className="flex items-center gap-1">
-					<strong>{shift.job}</strong> • {shift.start} – {shift.end}
+					{shift.job ? (
+						<>
+							<strong>{shift.job}</strong> •{" "}
+						</>
+					) : null}
+					{shift.start.slice(0, 5)} – {shift.end.slice(0, 5)}
 				</span>
 				<span className="text-muted-foreground">
 					{formatHours(minutes)} ({breakMinutes} min)
@@ -101,7 +106,7 @@ function DayCard({ day, showWeekHeader = false }: DayCardProps) {
 				) : null}
 			</CardHeader>
 
-			<CardContent className="flex flex-1 flex-col items-center justify-center">
+			<CardContent className="flex flex-1 flex-col items-center justify-center p-0.5">
 				{day.status === "rest" ? (
 					<span className="flex flex-col gap-2 text-xs text-muted-foreground">
 						Repos
