@@ -19,7 +19,7 @@ export default defineConfig({
 			manifest: false,
 			includeAssets: [
 				"manifest.webmanifest",
-				"shiflty-logo.svg",
+				"shiftly-logo.svg",
 				"shiftly-full-logo.svg",
 				"icons/icon-192.png",
 				"icons/icon-512.png",
@@ -28,9 +28,7 @@ export default defineConfig({
 				"icons/apple-touch-icon.png",
 			],
 			workbox: {
-				globPatterns: [
-					"**/*.{js,css,html,svg,png,webmanifest,woff2}",
-				],
+				globPatterns: ["**/*.{js,css,html,svg,png,webmanifest,woff2}"],
 				navigateFallback: "index.html",
 				navigateFallbackDenylist: [/^\/api\//],
 			},
