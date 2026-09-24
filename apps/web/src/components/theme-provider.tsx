@@ -17,6 +17,10 @@ type ThemeProviderState = {
 
 const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 const THEME_VALUES: Theme[] = ["dark", "light", "system"];
+const THEME_COLORS: Record<ResolvedTheme, string> = {
+	dark: "#09090b",
+	light: "#ffffff",
+};
 
 const ThemeProviderContext = React.createContext<
 	ThemeProviderState | undefined
@@ -36,6 +40,17 @@ function getSystemTheme(): ResolvedTheme {
 	}
 
 	return "light";
+}
+
+function syncThemeColorMeta(resolvedTheme: ResolvedTheme) {
+	document
+		.querySelectorAll('meta[name="theme-color"]')
+		.forEach((meta) => meta.remove());
+
+	const meta = document.createElement("meta");
+	meta.setAttribute("name", "theme-color");
+	meta.setAttribute("content", THEME_COLORS[resolvedTheme]);
+	document.head.appendChild(meta);
 }
 
 function disableTransitionsTemporarily() {
@@ -111,6 +126,7 @@ export function ThemeProvider({
 
 			root.classList.remove("light", "dark");
 			root.classList.add(resolvedTheme);
+			syncThemeColorMeta(resolvedTheme);
 
 			if (restoreTransitions) {
 				restoreTransitions();

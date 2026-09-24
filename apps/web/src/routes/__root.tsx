@@ -11,7 +11,7 @@ interface RouterContext {
 
 const RootLayout = () => {
 	return (
-		<div className="flex min-h-svh flex-col px-3 lg:px-0 lg:mx-auto max-w-5xl">
+		<div className="flex min-h-svh flex-col px-3 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] lg:px-0 lg:mx-auto max-w-5xl">
 			<Nav />
 			<div className="flex flex-1 flex-col gap-2">
 				<Outlet />
