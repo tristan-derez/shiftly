@@ -21,16 +21,22 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { toast } from "@workspace/ui/components/toast";
 import { authClient, setSessionCache } from "@/lib/auth-client";
+import { useOnline } from "@/lib/online";
+import { readCachedUserProfile } from "@/lib/user-profile-cache";
 
 function UserMenu() {
 	const router = useRouter();
 	const { authData } = useRouteContext({ from: "__root__" });
+	const online = useOnline();
+	const user = authData?.user ?? readCachedUserProfile();
 
-	if (!authData) {
+	if (!user) {
 		return null;
 	}
 
 	function handleSignOut() {
+		if (!online || !authData?.user) return;
+
 		void toast
 			.promise(
 				(async () => {
@@ -51,7 +57,6 @@ function UserMenu() {
 			.catch(() => {});
 	}
 
-	const { user } = authData;
 	const initials = user.name
 		.split(" ")
 		.map((part) => part.charAt(0))
@@ -73,7 +78,7 @@ function UserMenu() {
 			/>
 			<DropdownMenuContent align="end" className="w-45">
 				<DropdownMenuGroup>
-					<DropdownMenuItem>
+					<DropdownMenuItem disabled={!online}>
 						<UserIcon />
 						Compte
 					</DropdownMenuItem>
@@ -81,14 +86,18 @@ function UserMenu() {
 						<ClockIcon />
 						Accéder aux horaires
 					</DropdownMenuItem>
-					<DropdownMenuItem render={<Link to="/edit" />}>
+					<DropdownMenuItem disabled={!online} render={<Link to="/edit" />}>
 						<PencilSimpleIcon />
 						Modifier horaires
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem variant="destructive" onClick={handleSignOut}>
+					<DropdownMenuItem
+						disabled={!online || !authData?.user}
+						variant="destructive"
+						onClick={handleSignOut}
+					>
 						<SignOutIcon />
 						Se déconnecter
 					</DropdownMenuItem>
